@@ -1,15 +1,16 @@
 const readline = require('readline-sync');
 
-console.log('Enter the length of the room in meters:');
+const SQMETERS_TO_SQFEET = 10.7639;
 
+console.log('Enter the length of the room in meters:');
 let length = readline.prompt();
+length = parseInt(length, 10);
 
 console.log('Enter the width of the room in meters:');
-
 let width = readline.prompt();
+width = parseInt(width, 10);
 
-let areaInMeters = (Number(length) * Number(width));
+let areaInMeters = (length) * (width);
+let areaInFeet = (areaInMeters * SQMETERS_TO_SQFEET);
 
-let areaInFeet = (areaInMeters * 10.7639);
-
-console.log (`The area of the room is ${areaInMeters} square meters (${areaInFeet} square feet)`);
+console.log (`The area of the room is ${areaInMeters.toFixed(2)} square meters (${areaInFeet.toFixed(2)} square feet)`);
