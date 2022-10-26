@@ -1,0 +1,10 @@
+function multiply(numbers, multiplier) {
+  let newNumbers = [];
+  for (let counter = 0; counter < numbers.length; counter += 1) {
+    newNumbers.push(numbers[counter] * multiplier);
+  }
+  console.log(newNumbers);
+}
+
+let myNumbers = [1, 4, 3, 7, 2, 6];
+multiply(myNumbers, 3); // => [3, 12, 9, 21, 6, 18]
