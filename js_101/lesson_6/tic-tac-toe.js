@@ -16,7 +16,6 @@ const WINNING_LINES = [
 ];
 const OPTIMAL_SQUARE = '5';
 const FIRST_MOVER_SETTING = 'choose';
-let firstMover;
 
 function prompt(msg) {
   console.log(`=> ${msg}`);
@@ -68,6 +67,16 @@ function joinOr(array, delimiter = ', ', joinWord = 'or') {
   }
 }
 
+function chooseSquare(board, player) {
+  if (player === 'player') playerChoosesSquare(board);
+  else computerChoosesSquare(board);
+}
+
+function alternatePlayer(player) {
+  if (player === 'player') return 'computer';
+  else return 'player';
+}
+
 function playerChoosesSquare(board) {
   let square;
 
@@ -103,7 +112,7 @@ function computerChoosesSquare(board) {
     if (square) break;
   }
 
-  //optimal if available
+  //optimal square if available
   if (!square) {
     if (emptySquares(board).includes(OPTIMAL_SQUARE)) square = OPTIMAL_SQUARE;
   }
@@ -158,6 +167,7 @@ function detectWinner(board) {
 while (true) {
   let playerScore = 0;
   let computerScore = 0;
+  let firstMover;
 
   prompt(`Welcome to Tic-Tac-Toe. First to ${GAMES_TO_WIN} wins the match.`);
   if (FIRST_MOVER_SETTING === 'choose') {
@@ -184,24 +194,14 @@ while (true) {
     let board = initializeBoard();
 
     while (true) {
-      displayBoard(board);
-
-      if (firstMover === 'player') {
-        playerChoosesSquare(board);
-        if (someoneWon(board) || boardFull(board)) break;
-
-        computerChoosesSquare(board);
-        if (someoneWon(board) || boardFull(board)) break;
-
-      } else if (firstMover === 'computer') {
-        computerChoosesSquare(board);
-        if (someoneWon(board) || boardFull(board)) break;
-
+      let currentPlayer = firstMover;
+      while (true) {
         displayBoard(board);
-
-        playerChoosesSquare(board);
+        chooseSquare(board, currentPlayer);
+        currentPlayer = alternatePlayer(currentPlayer);
         if (someoneWon(board) || boardFull(board)) break;
       }
+      break;
     }
 
     displayBoard(board);
