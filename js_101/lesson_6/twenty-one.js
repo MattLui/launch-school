@@ -46,8 +46,8 @@ function total(cards) {
   return sum;
 }
 
-function busted(hand) {
-  return total(hand) > 21;
+function busted(total) {
+  return total > 21;
 }
 
 function playAgain() {
@@ -55,6 +55,10 @@ function playAgain() {
   prompt('Do you want to play again? (y or n)');
   let answer = readline.question();
   return answer.toLowerCase(0)[0] === 'y';
+}
+
+function hand(cards) {
+  return cards.map(card => `${card[1]}`).join(' ');
 }
 
 while (true) {
@@ -65,56 +69,68 @@ while (true) {
   //2. Deal cards to player and dealer
   let playerHand = [deck.pop(), deck.pop()];
   let dealerHand = [deck.pop(), deck.pop()];
+  let playerTotal = total(playerHand);
+  let dealerTotal = total(dealerHand);
   prompt(`Dealer has ${dealerHand[0][1]} and ?`);
   prompt(`Player has ${playerHand[0][1]} and ${playerHand[1][1]}`);
-  prompt(`Player total: ${total(playerHand)}`);
+  prompt(`Player total: ${playerTotal}`);
 
   /*3. Player turn: hit or stay
     - repeat until bust or stay*/
   while (true) {
-    prompt('Hit or stay?');
-    let answer = readline.question();
-    if (answer === 'stay' || busted(playerHand)) break;
+    let answer;
+    while (true) {
+      prompt('Hit or stay? (h or s)');
+      answer = readline.question().toLowerCase();
+      if (['h', 's'].includes(answer)) break;
+      prompt("Please enter 'h' or 's'.");
+    }
 
-    playerHand.push(deck.pop());
-    console.log(`Player is dealt ${playerHand[playerHand.length - 1][1]}. Player total: ${total(playerHand)}`);
-    if (busted(playerHand)) break;
+    if (answer === 'h') {
+      playerHand.push(deck.pop());
+      playerTotal = total(playerHand);
+      console.log(`Player is dealt ${playerHand[playerHand.length - 1][1]}. Player total: ${playerTotal}`);
+    }
+
+    if (busted(playerTotal) || answer === 's') break;
   }
 
   //4. If player busts, dealer wins.
-  if (busted(playerHand)) {
-    console.log('You busted! Dealer wins.');
+  if (busted(playerTotal)) {
+    prompt('You busted! Dealer wins.');
   } else {
-    console.log("You chose to stay!");
+    prompt("You chose to stay!");
 
     /*5. Dealer turn: hit or stay
     - repeat until total >= 17*/
-    console.log(`Dealer's cards are revealed. Dealer has ${dealerHand[0][1]} and ${dealerHand[1][1]}`);
+    prompt(`Dealer's cards are revealed. Dealer has ${hand(dealerHand)}.`);
     while (true) {
-      if (busted(dealerHand) || total(dealerHand) >= 17) break;
+      if (busted(dealerTotal) || dealerTotal >= 17) break;
       dealerHand.push(deck.pop());
-      console.log(`Dealer hits: ${dealerHand[dealerHand.length - 1][1]}.`);
+      dealerTotal = total(dealerHand);
+      prompt(`Dealer hits: ${dealerHand[dealerHand.length - 1][1]}`);
     }
 
     //6. If dealer busts, player wins.
-    if (busted(dealerHand)) {
-      console.log(`Dealer has ${total(dealerHand)} and busts! You win.`);
+    if (busted(dealerTotal)) {
+      console.log(`Dealer has ${dealerTotal} and busts! You win.`);
     } else {
-      console.log(`Dealer stays at ${total(dealerHand)}.`);
+      console.log(`Dealer stays at ${dealerTotal}.`);
     }
   }
 
   //7. Compare cards and declare winner.
-  if (!(busted(playerHand) || busted(dealerHand))) {
-    prompt(`Dealer's total: ${total(dealerHand)}`);
-    prompt(`Player's total: ${total(playerHand)}`);
-    if (total(playerHand) > total(dealerHand)) {
+  if (!(busted(playerTotal) || busted(dealerTotal))) {
+    prompt(`Dealer's total: ${dealerTotal}`);
+    prompt(`Player's total: ${playerTotal}`);
+    if (playerTotal > dealerTotal) {
       prompt('You win!');
-    } else if (total(playerHand) < total(dealerHand)) {
+    } else if (playerTotal < dealerTotal) {
       prompt('Dealer wins.');
     } else {
       prompt ("It's a push!");
     }
   }
+
   if (!playAgain()) break;
 }
