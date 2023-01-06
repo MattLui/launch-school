@@ -1,6 +1,5 @@
 /* eslint-disable indent */
 function findDup(array) {
-  //return the duplicate value and log it
   while (array.length > 0) {
     let number = array[0];
     array.shift();
