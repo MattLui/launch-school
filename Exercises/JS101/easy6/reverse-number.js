@@ -1,5 +1,4 @@
 function reverseNumber(integer) {
-  //return number with digits reversed
   let reversedNumberString = '';
   while (integer > 0) {
     reversedNumberString += (integer % 10);
