@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-use-before-define */
-let shuffle = require('shuffle-array');
-let readline = require('readline-sync');
+const shuffle = require('shuffle-array');
+const readline = require('readline-sync');
 
 class Card {
   constructor(rank, suit) {
