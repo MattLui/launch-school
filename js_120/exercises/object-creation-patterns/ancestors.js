@@ -3,13 +3,13 @@ let foo = {
   name: 'foo',
   ancestors() {
     let ancestorList = [];
-    let object = this;
+    let object = Object.getPrototypeOf(this);
     while (object !== null) {
-      let name = Object.getPrototypeOf(object).toString.call(object);
+      let name = object.name || 'Object.prototype';
       ancestorList.push(name);
       object = Object.getPrototypeOf(object);
     }
-    console.log(ancestorList);
+    return ancestorList;
   }
 };
 let bar = Object.create(foo);
@@ -19,7 +19,9 @@ baz.name = 'baz';
 let qux = Object.create(baz);
 qux.name = 'qux';
 
-qux.ancestors();  // returns ['baz', 'bar', 'foo', 'Object.prototype']
-baz.ancestors();  // returns ['bar', 'foo', 'Object.prototype']
-bar.ancestors();  // returns ['foo', 'Object.prototype']
-foo.ancestors();  // returns ['Object.prototype']
+console.log(
+  qux.ancestors(),  // returns ['baz', 'bar', 'foo', 'Object.prototype']
+  baz.ancestors(),  // returns ['bar', 'foo', 'Object.prototype']
+  bar.ancestors(),  // returns ['foo', 'Object.prototype']
+  foo.ancestors()  // returns ['Object.prototype']
+);
