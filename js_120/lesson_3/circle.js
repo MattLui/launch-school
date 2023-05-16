@@ -1,6 +1,6 @@
-let Circle = function(radius) {
+function Circle(radius) {
   this.radius = radius;
-};
+}
 
 Circle.prototype.area = function() {
   return Math.PI * this.radius * this.radius;

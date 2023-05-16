@@ -3,6 +3,7 @@ class CircularQueue {
     this.size = size;
     this.queue = [];
   }
+
   enqueue(num) {
     if (this.queue.length < this.size) {
       this.queue.push(num);
